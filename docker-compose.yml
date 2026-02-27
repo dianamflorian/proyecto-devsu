@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_PASSWORD: "12345"
+      POSTGRES_INITDB_ARGS: "-c max_connections=1000"
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - devsu-network
+
+  ms-clientes:
+    build: ./ms-clientes
+    container_name: ms-clientes
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5433/devsu_clientes"
+      SPRING_DATASOURCE_USERNAME: "postgres"
+      SPRING_DATASOURCE_PASSWORD: "12345"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "create-drop"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - devsu-network
+
+  ms-movimientos:
+    build: ./ms-movimientos
+    container_name: ms-movimientos
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5433/devsu_movimientos"
+      SPRING_DATASOURCE_USERNAME: "postgres"
+      SPRING_DATASOURCE_PASSWORD: "12345"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "create-drop"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - devsu-network
+
+volumes:
+  postgres_data:
+
+networks:
+  devsu-network:
+    driver: bridge

@@ -51,8 +51,6 @@ Se incluye el script:
 
 - `BaseDatos.sql` (creación de BD/tablas principales)
 
-> Si corres con `spring.jpa.hibernate.ddl-auto=update`, Hibernate puede crear/actualizar el esquema automáticamente.  
-> Aun así se incluye el script porque lo solicita la prueba.
 
 ### Persistencia de datos (evitar que se borren al reiniciar)
 - Usar:

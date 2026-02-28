@@ -6,10 +6,6 @@ Implementación de una API tipo **core bancario simplificado** (core banking “
 - **ms-movimientos**: gestión de **Movimientos** y generación de **Reporte**.
 - La comunicación entre microservicios se realiza desde **ms-movimientos → ms-clientes** usando **OpenFeign**, para validar cuentas y completar el nombre del **Cliente** en el reporte.
 
-> ¿Esto es un sistema financiero?  
-> Sí: es un **modelo reducido** de un sistema financiero (core banking simplificado). En producción normalmente se agregan seguridad, auditoría, concurrencia/locking, idempotencia formal, observabilidad, etc. Aquí se implementan las reglas y flujos esenciales solicitados por la prueba.
-
----
 
 ## Tecnologías
 

@@ -153,6 +153,38 @@ Formato de respuesta (según requerimiento):
 ]
 ```
 
+## Validación de endpoints (Postman)
+Se incluye una colección de Postman para validar rápidamente los casos de uso de la prueba técnica:
+
+- `DevSu-Integracion.postman_collection.json`
+- `DevSu-Local.postman_environment.json`
+
+### Ejecución
+1. Levantar servicios con Docker Compose:
+   ```bash
+   docker-compose up -d --build
+   ```
+2. Importar en Postman la **Collection** y el **Environment**
+3. Seleccionar el environment `DevSu-Local`
+4. Ejecutar requests en el orden sugerido:
+   - Crear clientes
+   - Crear cuentas
+   - Registrar movimientos
+   - Consultar movimientos
+   - Generar reporte
+
+---
+
+## Manejo de errores (API)
+Se implementó manejo de errores consistente con REST para evitar respuestas 500 en validaciones de negocio:
+
+- `409 Conflict`: recursos duplicados (ej. cliente existente por `identificacion`, cuenta existente por `numeroCuenta`)
+- `404 Not Found`: recursos inexistentes (ej. cuenta no encontrada al registrar movimientos)
+- `400 Bad Request`: request inválido (campos requeridos, tipo de movimiento inválido, cuenta inactiva, etc.)
+- `409 Conflict`: saldo insuficiente para retiros
+
+Esto permite que la colección Postman sea **re-ejecutable** sin fallar con errores 500 por registros ya existentes.
+
 ---
 
 ## Pruebas

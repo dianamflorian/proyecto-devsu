@@ -5,6 +5,7 @@ import com.devsu.clientes.entity.Cliente;
 import com.devsu.clientes.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.devsu.clientes.exception.RecursoDuplicadoException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,13 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public ClienteDTO crearCliente(ClienteDTO clienteDTO) {
+
+        if (clienteRepository.existsByIdentificacion(clienteDTO.getIdentificacion())) {
+            throw new RecursoDuplicadoException(
+                    "Ya existe un cliente con identificacion: " + clienteDTO.getIdentificacion()
+            );
+        }
+
         Cliente cliente = new Cliente();
         cliente.setNombre(clienteDTO.getNombre());
         cliente.setGenero(clienteDTO.getGenero());

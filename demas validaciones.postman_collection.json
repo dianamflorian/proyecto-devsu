@@ -1,0 +1,132 @@
+{
+  "info": {
+    "_postman_id": "974a57c8-28b9-40d8-9de8-703eb7e588dd",
+    "name": "demas validaciones",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52756977",
+    "_collection_link": "https://go.postman.co/collection/52756977-974a57c8-28b9-40d8-9de8-703eb7e588dd?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Consultar movimientos por cuenta (ms-movimientos)",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Probar la integración (que ms-movimientos “trae” el cliente)",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "E1 Reporte por cuenta (requiere fechas)",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Crear movimiento sin saldo",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar cuenta por numero de cuenta",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar cuentas",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "consultar cliente por id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8090/api/clientes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8090",
+          "path": [
+            "api",
+            "clientes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "verificar cuenta por numero",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "reporte en cliente",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "if (pm.response.code >= 200 && pm.response.code < 300) {\r",
+          "  const json = pm.response.json();\r",
+          "  pm.collectionVariables.set(\"clienteId\", json.id);\r",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "01",
+      "value": ""
+    },
+    {
+      "key": "clienteId",
+      "value": ""
+    }
+  ]
+}

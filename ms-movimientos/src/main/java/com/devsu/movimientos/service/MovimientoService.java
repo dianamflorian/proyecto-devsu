@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.devsu.movimientos.exception.BadRequestException;
+import com.devsu.movimientos.exception.RecursoNoEncontradoException;
+import com.devsu.movimientos.exception.SaldoNoDisponibleException;
+
 @Service
 public class MovimientoService {
 
@@ -22,40 +26,43 @@ public class MovimientoService {
     @Autowired
     private ClienteClient clienteClient;
 
+
     public MovimientoDTO registrarMovimiento(MovimientoDTO movimientoDTO) {
         if (movimientoDTO.getValor() == null || movimientoDTO.getValor().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("El valor del movimiento debe ser positivo");
+            throw new BadRequestException("El valor del movimiento debe ser positivo");
         }
         if (movimientoDTO.getNumeroCuenta() == null || movimientoDTO.getNumeroCuenta().isBlank()) {
-            throw new RuntimeException("El numeroCuenta es obligatorio");
+            throw new BadRequestException("El numeroCuenta es obligatorio");
         }
         if (movimientoDTO.getTipo() == null || movimientoDTO.getTipo().isBlank()) {
-            throw new RuntimeException("El tipo es obligatorio");
+            throw new BadRequestException("El tipo es obligatorio");
         }
 
+        String numeroCuenta = movimientoDTO.getNumeroCuenta().trim();
+        String tipo = movimientoDTO.getTipo().trim();
+
         BigDecimal saldoAnterior = movimientoRepository
-                .findTopByNumeroCuentaOrderByFechaDesc(movimientoDTO.getNumeroCuenta())
+                .findTopByNumeroCuentaOrderByFechaDesc(numeroCuenta)
                 .map(Movimiento::getSaldo)
-                .orElse(BigDecimal.ZERO);
+                .orElseGet(() -> obtenerSaldoInicialDesdeClientes(numeroCuenta));
 
         BigDecimal saldoNuevo;
-        String tipo = movimientoDTO.getTipo().trim();
 
         if (tipo.equalsIgnoreCase("Deposito")) {
             saldoNuevo = saldoAnterior.add(movimientoDTO.getValor());
         } else if (tipo.equalsIgnoreCase("Retiro")) {
             saldoNuevo = saldoAnterior.subtract(movimientoDTO.getValor());
             if (saldoNuevo.compareTo(BigDecimal.ZERO) < 0) {
-                throw new RuntimeException("Saldo no disponible");
+                throw new SaldoNoDisponibleException("Saldo no disponible");
             }
         } else {
-            throw new RuntimeException("Tipo de movimiento inválido (use Deposito o Retiro)");
+            throw new BadRequestException("Tipo de movimiento inválido (use Deposito o Retiro)");
         }
 
         Movimiento movimiento = new Movimiento();
-        movimiento.setNumeroCuenta(movimientoDTO.getNumeroCuenta());
+        movimiento.setNumeroCuenta(numeroCuenta);
         movimiento.setFecha(LocalDateTime.now());
-        movimiento.setTipo(movimientoDTO.getTipo());
+        movimiento.setTipo(tipo);
         movimiento.setValor(movimientoDTO.getValor());
         movimiento.setSaldo(saldoNuevo);
         movimiento.setDescripcion(movimientoDTO.getDescripcion());
@@ -63,6 +70,29 @@ public class MovimientoService {
         Movimiento movimientoGuardado = movimientoRepository.save(movimiento);
         return convertToDTO(movimientoGuardado);
     }
+
+    private BigDecimal obtenerSaldoInicialDesdeClientes(String numeroCuenta) {
+        try {
+            var cuenta = clienteClient.obtenerCuentaPorNumero(numeroCuenta);
+
+            if (cuenta == null) {
+                throw new RecursoNoEncontradoException("Cuenta no encontrada: " + numeroCuenta);
+            }
+            if (cuenta.getEstado() != null && !cuenta.getEstado()) {
+                throw new BadRequestException("La cuenta está inactiva: " + numeroCuenta);
+            }
+
+            if (cuenta.getSaldoInicial() != null) return cuenta.getSaldoInicial();
+            if (cuenta.getSaldo() != null) return cuenta.getSaldo();
+            return BigDecimal.ZERO;
+
+        } catch (RecursoNoEncontradoException | BadRequestException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BadRequestException("No fue posible validar la cuenta en ms-clientes para: " + numeroCuenta);
+        }
+    }
+
 
     public List<MovimientoDTO> obtenerMovimientos(String numeroCuenta) {
         return movimientoRepository.findByNumeroCuenta(numeroCuenta)

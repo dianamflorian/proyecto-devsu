@@ -5,6 +5,7 @@ import com.devsu.clientes.entity.Cliente;
 import com.devsu.clientes.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,8 @@ public class ClienteService {
         cliente.setIdentificacion(clienteDTO.getIdentificacion());
         cliente.setDireccion(clienteDTO.getDireccion());
         cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setEstado(true);
+        cliente.setContrasena(clienteDTO.getContrasena()); // <-- agregar
+        cliente.setEstado(clienteDTO.getEstado() != null ? clienteDTO.getEstado() : true); // opcional
 
         Cliente clienteGuardado = clienteRepository.save(cliente);
         return convertToDTO(clienteGuardado);
@@ -52,6 +54,11 @@ public class ClienteService {
         cliente.setTelefono(clienteDTO.getTelefono());
         cliente.setEstado(clienteDTO.getEstado());
 
+        // Si quieres permitir cambiarla solo cuando venga:
+        if (clienteDTO.getContrasena() != null) {
+            cliente.setContrasena(clienteDTO.getContrasena());
+        }
+
         Cliente clienteActualizado = clienteRepository.save(cliente);
         return convertToDTO(clienteActualizado);
     }
@@ -69,6 +76,7 @@ public class ClienteService {
                 cliente.getIdentificacion(),
                 cliente.getDireccion(),
                 cliente.getTelefono(),
+                cliente.getContrasena(), // <-- agregar (si NO quieres devolverla, dime y lo cambiamos)
                 cliente.getEstado()
         );
     }

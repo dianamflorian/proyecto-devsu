@@ -27,6 +27,16 @@ public class CuentaController {
         return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
 
+    @GetMapping("/numero/{numeroCuenta}")
+    public ResponseEntity<CuentaDTO> obtenerCuentaPorNumero(@PathVariable String numeroCuenta) {
+        try {
+            CuentaDTO cuenta = cuentaService.obtenerCuentaPorNumero(numeroCuenta);
+            return new ResponseEntity<>(cuenta, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<CuentaDTO>> obtenerTodasCuentas() {
         List<CuentaDTO> cuentas = cuentaService.obtenerTodasCuentas();

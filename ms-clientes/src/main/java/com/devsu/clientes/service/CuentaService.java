@@ -43,6 +43,17 @@ public class CuentaService {
         return convertToDTO(cuenta);
     }
 
+    public CuentaDTO obtenerCuentaPorNumero(String numeroCuenta) {
+        if (numeroCuenta == null || numeroCuenta.isBlank()) {
+            throw new RuntimeException("numeroCuenta es obligatorio");
+        }
+
+        Cuenta cuenta = cuentaRepository.findByNumeroCuenta(numeroCuenta)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada con numeroCuenta: " + numeroCuenta));
+
+        return convertToDTO(cuenta);
+    }
+
     public List<CuentaDTO> obtenerTodasCuentas() {
         return cuentaRepository.findAll()
                 .stream()

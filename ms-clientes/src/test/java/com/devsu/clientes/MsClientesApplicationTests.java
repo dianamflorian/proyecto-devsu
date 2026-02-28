@@ -9,5 +9,4 @@ class MsClientesApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

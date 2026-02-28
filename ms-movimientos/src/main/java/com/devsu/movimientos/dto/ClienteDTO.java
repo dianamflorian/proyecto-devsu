@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClienteDTO {
-
     private Long id;
     private String nombre;
     private String genero;
@@ -16,5 +15,6 @@ public class ClienteDTO {
     private String identificacion;
     private String direccion;
     private String telefono;
+    private String contrasena; // se agrego conraseña
     private Boolean estado;
 }

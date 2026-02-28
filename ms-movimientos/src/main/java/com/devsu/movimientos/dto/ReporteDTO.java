@@ -1,5 +1,8 @@
 package com.devsu.movimientos.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,28 +12,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReporteDTO {
 
-    private String fecha; // Changed from LocalDateTime to String
-    private Boolean estado; // Changed from String to Boolean
+    @JsonProperty("Fecha")
+    private LocalDateTime fecha;
 
-    // Constructor, getters, and setters
-    public ReporteDTO(String fecha, Boolean estado) {
-        this.fecha = fecha;
-        this.estado = estado;
-    }
+    @JsonProperty("Cliente")
+    private String cliente;
 
-    public String getFecha() {
-        return fecha;
-    }
+    @JsonProperty("Numero Cuenta")
+    private String numeroCuenta;
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
+    @JsonProperty("Tipo")
+    private String tipo;
 
-    public Boolean getEstado() {
-        return estado;
-    }
+    @JsonProperty("Saldo Inicial")
+    private BigDecimal saldoInicial;
 
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
-    }
+    // En el ejemplo te lo piden boolean true/false, no "Activo"
+    @JsonProperty("Estado")
+    private Boolean estado;
+
+    @JsonProperty("Movimiento")
+    private BigDecimal movimiento;
+
+    @JsonProperty("Saldo Disponible")
+    private BigDecimal saldoDisponible;
 }

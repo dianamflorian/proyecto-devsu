@@ -5,6 +5,8 @@ import com.devsu.clientes.entity.Cuenta;
 import com.devsu.clientes.entity.Cliente;
 import com.devsu.clientes.repository.CuentaRepository;
 import com.devsu.clientes.repository.ClienteRepository;
+import com.devsu.clientes.exception.BadRequestException;
+import com.devsu.clientes.exception.RecursoNoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -22,7 +24,7 @@ public class CuentaService {
 
     public CuentaDTO crearCuenta(CuentaDTO cuentaDTO) {
         Cliente cliente = clienteRepository.findById(cuentaDTO.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado con id: " + cuentaDTO.getClienteId()));
 
         Cuenta cuenta = new Cuenta();
         cuenta.setNumeroCuenta(cuentaDTO.getNumeroCuenta());
@@ -39,17 +41,17 @@ public class CuentaService {
 
     public CuentaDTO obtenerCuenta(Long id) {
         Cuenta cuenta = cuentaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cuenta no encontrada con id: " + id));
         return convertToDTO(cuenta);
     }
 
     public CuentaDTO obtenerCuentaPorNumero(String numeroCuenta) {
         if (numeroCuenta == null || numeroCuenta.isBlank()) {
-            throw new RuntimeException("numeroCuenta es obligatorio");
+            throw new BadRequestException("numeroCuenta es obligatorio");
         }
 
         Cuenta cuenta = cuentaRepository.findByNumeroCuenta(numeroCuenta)
-                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada con numeroCuenta: " + numeroCuenta));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cuenta no encontrada con numeroCuenta: " + numeroCuenta));
 
         return convertToDTO(cuenta);
     }
@@ -63,7 +65,7 @@ public class CuentaService {
 
     public CuentaDTO actualizarCuenta(Long id, CuentaDTO cuentaDTO) {
         Cuenta cuenta = cuentaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cuenta no encontrada con id: " + id));
 
         cuenta.setTipo(cuentaDTO.getTipo());
         cuenta.setSaldo(cuentaDTO.getSaldo());

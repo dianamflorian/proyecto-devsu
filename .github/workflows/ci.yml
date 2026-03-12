@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, "copilot/**" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test-ms-clientes:
+    name: Build & Test ms-clientes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ms-clientes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and test
+        run: mvn -B test
+
+  build-and-test-ms-movimientos:
+    name: Build & Test ms-movimientos
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ms-movimientos
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and test
+        run: mvn -B test

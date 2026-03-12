@@ -29,12 +29,8 @@ public class CuentaController {
 
     @GetMapping("/numero/{numeroCuenta}")
     public ResponseEntity<CuentaDTO> obtenerCuentaPorNumero(@PathVariable String numeroCuenta) {
-        try {
-            CuentaDTO cuenta = cuentaService.obtenerCuentaPorNumero(numeroCuenta);
-            return new ResponseEntity<>(cuenta, HttpStatus.OK);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        CuentaDTO cuenta = cuentaService.obtenerCuentaPorNumero(numeroCuenta);
+        return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
 
     @GetMapping

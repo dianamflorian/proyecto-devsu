@@ -23,12 +23,8 @@ public class ClienteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> obtenerCliente(@PathVariable Long id) {
-        try {
-            ClienteDTO cliente = clienteService.obtenerCliente(id);
-            return new ResponseEntity<>(cliente, HttpStatus.OK);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ClienteDTO cliente = clienteService.obtenerCliente(id);
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
     @GetMapping

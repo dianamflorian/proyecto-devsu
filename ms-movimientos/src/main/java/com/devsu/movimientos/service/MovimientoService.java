@@ -112,7 +112,7 @@ public class MovimientoService {
 
     public MovimientoDTO obtenerMovimiento(Long id) {
         Movimiento movimiento = movimientoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Movimiento no encontrado con id: " + id));
         return convertToDTO(movimiento);
     }
 

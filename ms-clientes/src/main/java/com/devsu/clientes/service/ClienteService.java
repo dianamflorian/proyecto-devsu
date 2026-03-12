@@ -6,6 +6,7 @@ import com.devsu.clientes.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.devsu.clientes.exception.RecursoDuplicadoException;
+import com.devsu.clientes.exception.RecursoNoEncontradoException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class ClienteService {
 
     public ClienteDTO obtenerCliente(Long id) {
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado con id: " + id));
         return convertToDTO(cliente);
     }
 
@@ -53,7 +54,7 @@ public class ClienteService {
 
     public ClienteDTO actualizarCliente(Long id, ClienteDTO clienteDTO) {
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado con id: " + id));
 
         cliente.setNombre(clienteDTO.getNombre());
         cliente.setGenero(clienteDTO.getGenero());

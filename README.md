@@ -1,3 +1,6 @@
+> ⚠️ **IMPORTANT NOTICE FOR REVIEWERS:** This project is a purely educational, simulated "Lite" core banking backend blueprint. It does **NOT** process, store, or connect to any real-world financial records, live banking networks, or actual personal customer data. All database schemas utilize mock/synthetic sample entities for local development and architecture demonstration purposes only.
+
+
 # CoreBank Lite — API de Clientes, Cuentas y Movimientos (Prueba Técnica DevSu)
 
 Implementación de una API tipo **core bancario simplificado** (core banking “lite”) basada en **microservicios** con Spring Boot.
@@ -255,3 +258,10 @@ mvn test
 
 - El reporte completa el nombre del **Cliente** consultando a **ms-clientes** vía Feign (cuenta → clienteId → cliente).
 - Si un cliente/cuenta no existe, el servicio responde **404** (no 500).
+
+
+## 🚀 Future Roadmap & TODO (Next 20+ Hours of Work)
+- [ ] Refactor synchronous inter-service communication from OpenFeign to an asynchronous event-driven architecture using Apache Kafka or RabbitMQ.
+- [ ] Implement a centralized security layer using Spring Security and OAuth2 / JWT tokens for protected API endpoints.
+- [ ] Expand unit and integration test coverage across `ms-clientes` and `ms-movimientos` using Mockito and WebTestClient.
+- [ ] Set up centralized logging and distributed tracing (Spring Cloud Sleuth / Zipkin) to monitor microservice transactions.
